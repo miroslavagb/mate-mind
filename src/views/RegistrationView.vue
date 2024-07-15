@@ -81,6 +81,7 @@ const registerUser = async () => {
     });
     alert(response.data.message);
     // Redirect or other when sucess reg
+    //does the brach work properly!?
   } catch (error) {
     if (error.response) {
       alert(error.response.data.message);
