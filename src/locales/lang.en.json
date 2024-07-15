@@ -1,0 +1,53 @@
+{
+    "projectSettings": {
+      "navbarSettings": {
+        "displayLogo": "true",
+        "home": "true",
+        "about": "true",
+        "aiAssisstant": "true",
+        "loginRegister": "true",
+        "languageChanger": "true"
+      },
+      "modules": {
+        "home": "true",
+        "about": "true",
+        "aiAssisstant": "true"
+            }
+    },
+    "projectRoutes": {
+      "home": "Home",
+      "about": "About",
+      "aiAssisstant": "AI Assisstant",
+      "changeLanguage": ""
+    },
+    "homePage": {
+      "title": "Welcome to your academic ally—where <b>AI</b> empowers your learning journey. Step into a world where <b>education</b> meets <strong>innovation</strong>.",
+      "aboutBtn":"Learn more",
+      "joinBtn":"Try our AI Assisstant"
+    },
+
+    "aboutPage":{
+      "mainGoal":"Main Goal",
+      "goalsTitle":"What we offer to our users"
+    }
+,
+    "loginTranslations": {
+      "loginButton":"Login"
+    },
+    "logoutTranslations": {
+      "logoutButton":"Logout"
+    },
+    
+    "registerTranslations": {
+      "registerButton":"Register",
+      "youRegisteredSuccessfully": "You registered successfully",
+      "registerFirstName": "First name",
+      "registerLastName": "Last name",
+      "registerEmail": "Email",
+      "registerPassword": "Password",
+      "registerRepeatPassword": "Repeat password"
+    }
+
+  }
+
+  

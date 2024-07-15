@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Only an example */
+@layer base {
+    main {
+      @apply px-4 md:px-20;
+    }
+    p {
+      @apply text-neutral-200;
+    }
+  }
+  
+  .epicFont {
+    font-family: "Roboto Slab", sans-serif;
+    }
