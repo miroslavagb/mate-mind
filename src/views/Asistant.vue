@@ -38,7 +38,7 @@ const uploadFile = async () => {
 
   try {
     const userId = localStorage.getItem('user_id');
-    const response = await axios.post('http://127.0.0.1:5000/upload', formData, {
+    const response = await axios.postForm('http://127.0.0.1:5000/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'User-Id': userId // Set the User-Id header
@@ -55,7 +55,7 @@ const uploadFile = async () => {
 const evaluateTest = async () => {
   try {
     const userId = localStorage.getItem('user_id');
-    const response = await axios.post('http://127.0.0.1:5000/evaluate', { /*evaluation data */ }, {
+    const response = await axios.postForm('http://127.0.0.1:5000/evaluate', { /*evaluation data */ }, {
       headers: {
         'User-Id': userId
       }
