@@ -34,7 +34,6 @@
         if (this.userInput.trim() !== '') {
           this.messages.push({ id: this.messages.length + 1, text: this.userInput, type: 'user' });
           this.userInput = '';
-          // Simulate bot response (replace with actual logic)
           this.messages.push({ id: this.messages.length + 1, text: 'Sure, I can help you with that!', type: 'bot' });
         }
       },

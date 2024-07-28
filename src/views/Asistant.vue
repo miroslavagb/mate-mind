@@ -1,69 +1,70 @@
 <template>
-  <div>
-    <input type="file" @change="handleFileUpload">
-    <button @click="uploadFile">Upload File</button>
-
-    <div v-if="evaluationResults">
-      <h2>Evaluation Results</h2>
-      <ul>
-        <li v-for="result in evaluationResults" :key="result.question_id">
-          <p>Question: {{ result.question_title }}</p>
-          <p>Selected Option: {{ result.selected_option }}</p>
-          <p>Correct Option: {{ result.correct_option }}</p>
-        </li>
-      </ul>
+  <div v-if="isAuthenticated.value" class="assistant-container">
+    <div class="upload-area">
+      <book-upload @book-uploaded="handleBookUploaded"></book-upload>
     </div>
+    <div v-if="bookUploaded" class="chat-area">
+      <chat-box :book="currentBook"></chat-box>
+    </div>
+  </div>
+  <div v-else>
+    <!-- Optionally, provide feedback or redirect the user -->
+    <p>You must be logged in to view this page.</p>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import axios from 'axios';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuth } from '@/components/Auth/useAuth.js';
+import BookUpload from '@/components/Assistant/BookUpload.vue';
+import ChatBox from '@/components/Assistant/ChatBox.vue';
 
-const fileToUpload = ref(null);
-const evaluationResults = ref(null);
+const { isAuthenticated } = useAuth();
+const router = useRouter();
+const bookUploaded = ref(false);
+const currentBook = ref(null);
 
-const handleFileUpload = (event) => {
-  fileToUpload.value = event.target.files[0];
+const handleBookUploaded = (book) => {
+  currentBook.value = book;
+  bookUploaded.value = true;
 };
 
-const uploadFile = async () => {
-  if (!fileToUpload.value) {
-    alert('Please select a file to upload');
-    return;
+// Redirect if not authenticated
+onMounted(() => {
+  if (!isAuthenticated.value) {
+    router.push('/login');
   }
-
-  const formData = new FormData();
-  formData.append('file', fileToUpload.value);
-
-  try {
-    const userId = localStorage.getItem('user_id');
-    const response = await axios.postForm('http://127.0.0.1:5000/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'User-Id': userId // Set the User-Id header
-      }
-    });
-    alert('File uploaded successfully');
-    // Optionally, display response data or perform other actions
-  } catch (error) {
-    alert('An error occurred while uploading the file');
-    console.error(error);
-  }
-};
-
-const evaluateTest = async () => {
-  try {
-    const userId = localStorage.getItem('user_id');
-    const response = await axios.postForm('http://127.0.0.1:5000/evaluate', { /*evaluation data */ }, {
-      headers: {
-        'User-Id': userId
-      }
-    });
-    evaluationResults.value = response.data.evaluation_response;
-  } catch (error) {
-    alert('An error occurred while evaluating the test');
-    console.error(error);
-  }
-};
+});
 </script>
+
+<style>
+.assistant-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  height: 100vh;
+  box-sizing: border-box;
+  background: #1D2029;
+}
+
+.upload-area, .chat-area {
+  width: 90%;
+  max-width: 600px;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: linear-gradient(145deg, #2E325A, #252846);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  color: #FFF;
+}
+
+.upload-area {
+  border: 1px solid #414561;
+}
+
+.chat-area {
+  background: linear-gradient(145deg, #252846, #1E2039);
+}
+</style>
