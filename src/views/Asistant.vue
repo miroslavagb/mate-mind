@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isAuthenticated.value" class="assistant-container">
+  <div v-if="isAuthenticated" class="assistant-container"> 
     <div class="upload-area">
       <book-upload @book-uploaded="handleBookUploaded"></book-upload>
     </div>
@@ -8,13 +8,12 @@
     </div>
   </div>
   <div v-else>
-    <!-- Optionally, provide feedback or redirect the user -->
     <p>You must be logged in to view this page.</p>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuth } from '@/components/Auth/useAuth.js';
 import BookUpload from '@/components/Assistant/BookUpload.vue';
@@ -30,7 +29,14 @@ const handleBookUploaded = (book) => {
   bookUploaded.value = true;
 };
 
-// Redirect if not authenticated
+// Watch for authentication changes
+watch(isAuthenticated, (newVal) => {
+  if (!newVal) {
+    router.push('/login');
+  }
+});
+
+// Initial redirect if not authenticated
 onMounted(() => {
   if (!isAuthenticated.value) {
     router.push('/login');

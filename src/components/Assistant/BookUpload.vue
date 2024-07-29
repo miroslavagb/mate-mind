@@ -27,16 +27,18 @@ export default {
       try {
         const response = await axios.postForm('http://127.0.0.1:5000/upload', formData, {
           headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`, //  JWT token here
             'Content-Type': 'multipart/form-data'
           }
         });
-        this.$emit('book-uploaded', response.data.book);  // Assuming backend sends back some book details
+        this.$emit('book-uploaded', response.data.book);  //  backend sends back some book details
         alert('Book uploaded successfully!');
       } catch (error) {
         console.error('Failed to upload book:', error);
-        alert('Failed to upload book.');
+        alert('Failed to upload book: ' + (error.response ? error.response.data.error : 'Network error'));
       }
     }
   }
 };
 </script>
+
