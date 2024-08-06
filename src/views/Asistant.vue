@@ -1,10 +1,10 @@
 <template>
-  <div v-if="isAuthenticated" class="assistant-container"> 
+  <div v-if="isAuthenticated" class="assistant-container">
     <div class="upload-area">
       <book-upload @book-uploaded="handleBookUploaded"></book-upload>
     </div>
     <div v-if="bookUploaded" class="chat-area">
-      <chat-box :book="currentBook"></chat-box>
+      <chat-box v-if="currentBook" :book="currentBook"></chat-box>
     </div>
   </div>
   <div v-else>

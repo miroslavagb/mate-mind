@@ -27,11 +27,11 @@ export default {
       try {
         const response = await axios.postForm('http://127.0.0.1:5000/upload', formData, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`, //  JWT token here
-            'Content-Type': 'multipart/form-data'
+            'Authorization': `Bearer ${localStorage.getItem('token')}`, // JWT token
+            'Content-Type': 'multipart/form-data' // just in case 
           }
         });
-        this.$emit('book-uploaded', response.data.book);  //  backend sends back some book details
+        this.$emit('book-uploaded', response.data); 
         alert('Book uploaded successfully!');
       } catch (error) {
         console.error('Failed to upload book:', error);
@@ -41,4 +41,3 @@ export default {
   }
 };
 </script>
-

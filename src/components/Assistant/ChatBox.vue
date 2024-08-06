@@ -26,15 +26,21 @@ export default {
   },
   methods: {
     async askQuestion() {
-      if (!this.question) return;
+      if (!this.question || !this.book) return;
 
       try {
-        const response = await axios.post('http://127.0.0.1:5000/answer', {
-          question: this.question,
-          bookId: this.book.id  // assuming the book object has an id
+        const response = await axios.postForm('http://127.0.0.1:5000/answer', {
+          question: this.question
+        }, {
+          headers: {
+            'Content-Type': 'application/json', 
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'User-Id': '9',  //replace with ucrrent 
+            'File-Id': this.book.id
+          }
         });
-        this.responses.push({ text: response.data.answer });
-        this.question = '';  // Clear input after sending
+        this.responses.push({ text: response.data.data.content }); 
+        this.question = '';  
       } catch (error) {
         console.error('Failed to get an answer:', error);
         this.responses.push({ text: 'Error getting an answer. Please try again.' });
