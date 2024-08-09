@@ -5,6 +5,7 @@
     </div>
     <div v-if="bookUploaded" class="chat-area">
       <chat-box v-if="currentBook" :book="currentBook"></chat-box>
+      <question-generator v-if="currentBook" :book="currentBook"></question-generator>
     </div>
   </div>
   <div v-else>
@@ -18,6 +19,7 @@ import { useRouter } from 'vue-router';
 import { useAuth } from '@/components/Auth/useAuth.js';
 import BookUpload from '@/components/Assistant/BookUpload.vue';
 import ChatBox from '@/components/Assistant/ChatBox.vue';
+import QuestionGenerator from '@/components/Assistant/QuestGenerator.vue';
 
 const { isAuthenticated } = useAuth();
 const router = useRouter();
@@ -43,6 +45,7 @@ onMounted(() => {
   }
 });
 </script>
+
 
 <style>
 .assistant-container {
