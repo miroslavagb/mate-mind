@@ -1,17 +1,22 @@
 <template>
   <div v-if="isAuthenticated" class="assistant-container">
-    <div class="upload-area">
+    <aside class="file-upload-area">
       <book-upload @book-uploaded="handleBookUploaded"></book-upload>
-    </div>
-    <div v-if="bookUploaded" class="chat-area">
-      <chat-box v-if="currentBook" :book="currentBook"></chat-box>
-      <question-generator v-if="currentBook" :book="currentBook"></question-generator>
-    </div>
+      <ul v-if="bookUploaded">
+        <li>{{ currentBook.name }}</li>
+      </ul>
+    </aside>
+    <section class="conversation-area">
+      <chat-box :book="currentBook"></chat-box>
+      <question-generator v-if="bookUploaded" :book="currentBook"></question-generator>
+    </section>
   </div>
   <div v-else>
     <p>You must be logged in to view this page.</p>
   </div>
 </template>
+
+
 
 <script setup>
 import { ref, onMounted, watch } from 'vue';
@@ -31,14 +36,12 @@ const handleBookUploaded = (book) => {
   bookUploaded.value = true;
 };
 
-// Watch for authentication changes
 watch(isAuthenticated, (newVal) => {
   if (!newVal) {
     router.push('/login');
   }
 });
 
-// Initial redirect if not authenticated
 onMounted(() => {
   if (!isAuthenticated.value) {
     router.push('/login');
@@ -50,30 +53,50 @@ onMounted(() => {
 <style>
 .assistant-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
   height: 100vh;
-  box-sizing: border-box;
-  background: #1D2029;
+  background: #282c34; 
 }
 
-.upload-area, .chat-area {
-  width: 90%;
-  max-width: 600px;
-  margin-bottom: 20px;
+.file-upload-area {
+  width: 300px;
   padding: 20px;
-  background: linear-gradient(145deg, #2E325A, #252846);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
+  background: #2E325A; 
   color: #FFF;
+  border-right: 1px solid #414561; 
 }
 
-.upload-area {
-  border: 1px solid #414561;
+.conversation-area {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background: #1D2029; 
+  color: white;
+  padding: 20px;
 }
 
-.chat-area {
-  background: linear-gradient(145deg, #252846, #1E2039);
+.input, .textarea, .button {
+  margin-bottom: 10px;
+  padding: 12px;
+  border-radius: 5px;
+  border: none;
+  color: #333;
+  background: #fff; 
 }
+
+.questions-list, .response {
+  margin-top: 20px;
+}
+
+.question, .response {
+  margin-top: 10px;
+  padding: 10px;
+  background: #333;
+  border-radius: 5px;
+  color: #fff;
+}
+
+
+
+
+
 </style>

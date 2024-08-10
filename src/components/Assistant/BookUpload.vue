@@ -1,8 +1,10 @@
 <template>
   <div>
     <input type="file" @change="fileSelected">
-    <button @click="uploadBook" :disabled="!selectedFile">Upload</button>
   </div>
+  <div class="upload-button-container">
+  <button @click="uploadBook" :disabled="!selectedFile" class="upload-button">Upload</button>
+</div>
 </template>
 
 <script>
@@ -41,3 +43,7 @@ export default {
   }
 };
 </script>
+
+<style>
+
+</style>

@@ -1,72 +1,135 @@
 <template>
-  <div>
-    <input
-      v-model="question"
-      placeholder="Ask a question about the book..."
-      @keyup.enter="askQuestion"
-    />
-    <button @click="askQuestion">Ask</button>
-    <div v-for="response in responses" :key="response.id" class="response">
-      {{ response.text }}
+  <div class="chat-container">
+    <div class="messages">
+      <div v-for="response in responses" :key="response.id" class="message" :class="{'user': response.user}">
+        {{ response.text }}
+      </div>
+    </div>
+    <div class="input-area">
+      <input type="text" v-model="message" placeholder="Ask a question or command..." class="input-field" @keyup.enter="sendMessage">
+      <button @click="sendMessage" class="button">Send</button>
     </div>
   </div>
 </template>
 
+
+
 <script>
-import axios from "axios";
+import axios from 'axios';
 
 export default {
   props: {
     book: {
       type: Object,
-      required: true,
+      required: false, 
     },
   },
   data() {
     return {
-      question: "",
+      message: '',
       responses: [],
-      userId: null, // store current user 
+      userId: localStorage.getItem('userId'), 
     };
   },
-  mounted() {
-    // Retrieve the user ID from local storage or wherever its stored
-    this.userId = localStorage.getItem("userId"); 
-  },
   methods: {
-    async askQuestion() {
-      if (!this.question || !this.book) return;
+    sendMessage() {
+      const trimmedMessage = this.message.trim();
+      if (!trimmedMessage) return;
+      
+      this.responses.push({ id: Date.now(), text: trimmedMessage, user: true });
+      this.message = '';
 
+      this.processMessage(trimmedMessage);
+    },
+    processMessage(message) {
+      if (message.toLowerCase().includes("how") || message.toLowerCase().includes("what")) {
+        this.askQuestion(message);
+      } else {
+        this.responses.push({ id: Date.now(), text: "I'm not sure how to help with that.", user: false });
+      }
+    },
+    async askQuestion(question) {
+      if (!this.book) {
+        this.responses.push({ id: Date.now(), text: "Please upload a book first to ask questions related to it.", user: false });
+        return;
+      }
       try {
         const response = await axios.post(
           "http://127.0.0.1:5000/answer",
-          { question: this.question }, // 
+          { question },
           {
             headers: {
-              "Content-Type": "application/json", // set for JSON data
-              Authorization: `Bearer ${localStorage.getItem("token")}`, 
-              "User-Id": this.userId, 
-              "File-Id": this.book.id, //гet user& book id from db
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "User-Id": this.userId,
+              "File-Id": this.book.id,
             },
           }
         );
-
-        this.responses.push({ text: response.data.data.content });
-        this.question = "";
+        this.responses.push({ id: Date.now(), text: response.data.data.content, user: false });
       } catch (error) {
         console.error("Failed to get an answer:", error);
-        this.responses.push({ text: "Error getting an answer. Please try again." });
+        this.responses.push({ id: Date.now(), text: "Error getting an answer. Please try again.", user: false });
       }
     },
-  },
+  }
 };
 </script>
 
+
+
 <style scoped>
-.response {
-  margin-top: 10px;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.message {
+  margin: 5px 0;
+  color: #fff;
+}
+
+.user {
+  text-align: right;
+}
+
+.input-area {
+  display: flex;
+  padding: 10px;
+}
+
+.input-field {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.button {
+  padding: 10px 20px;
+  background-color: #4A90E2;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #357ABD;
+}
+
+.chat-area {
+  max-height: 80vh;
+  overflow-y: auto;
+  background: linear-gradient(145deg, #252846, #1E2039);
+  padding: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
 }
 </style>

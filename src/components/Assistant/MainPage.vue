@@ -9,6 +9,8 @@
 <script>
 import BookUpload from './BookUpload.vue';
 import ChatBox from './ChatBox.vue';
+import QuestionGenerator from './QuestGenerator.vue';
+
 
 export default {
   components: {
@@ -31,3 +33,8 @@ export default {
 };
 </script>
 <!-- test -->
+
+
+<style> 
+
+</style>
