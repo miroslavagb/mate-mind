@@ -7,8 +7,8 @@
       </ul>
     </aside>
     <section class="conversation-area">
-      <chat-box :book="currentBook"></chat-box>
-      <question-generator v-if="bookUploaded" :book="currentBook"></question-generator>
+      <chat-box :book="currentBook" :disabled="!bookUploaded"></chat-box>
+      <question-generator :disabled="!bookUploaded" :book="currentBook"></question-generator>
     </section>
   </div>
   <div v-else>
@@ -53,8 +53,9 @@ onMounted(() => {
 <style>
 .assistant-container {
   display: flex;
-  height: 100vh;
+  height: 90vh;
   background: #282c34; 
+  overflow: hidden;
 }
 
 .file-upload-area {

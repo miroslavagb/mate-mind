@@ -6,13 +6,11 @@
       </div>
     </div>
     <div class="input-area">
-      <input type="text" v-model="message" placeholder="Ask a question or command..." class="input-field" @keyup.enter="sendMessage">
-      <button @click="sendMessage" class="button">Send</button>
+      <input type="text" v-model="message" :disabled="!book" placeholder="Ask a question or command..." class="input-field" @keyup.enter="sendMessage">
+      <button @click="sendMessage" :disabled="!book" class="button">Send</button>
     </div>
   </div>
 </template>
-
-
 
 <script>
 import axios from 'axios';
@@ -21,7 +19,7 @@ export default {
   props: {
     book: {
       type: Object,
-      required: false, 
+      required: false, // changed to false for optional prop
     },
   },
   data() {
@@ -34,11 +32,10 @@ export default {
   methods: {
     sendMessage() {
       const trimmedMessage = this.message.trim();
-      if (!trimmedMessage) return;
+      if (!trimmedMessage || !this.book) return;
       
       this.responses.push({ id: Date.now(), text: trimmedMessage, user: true });
       this.message = '';
-
       this.processMessage(trimmedMessage);
     },
     processMessage(message) {
@@ -75,6 +72,7 @@ export default {
   }
 };
 </script>
+
 
 
 

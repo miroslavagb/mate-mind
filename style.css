@@ -1,66 +1,66 @@
 .assistant-container {
-    display: flex;
-    height: 100vh;
-    background: #282c34; 
-  }
-  
-  .file-upload-area {
-    width: 300px;
-    padding: 20px;
-    background: #2E325A; 
-    color: #FFF;
-    border-right: 1px solid #414561; 
-  }
-  
-  .conversation-area {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    background: #1D2029; 
-    color: white;
-    padding: 20px;
-  }
-  
-  .input, .textarea, .button {
-    margin-bottom: 10px;
-    padding: 12px;
-    border-radius: 5px;
-    border: none;
-    color: #333;
-    background: #fff; 
-  }
-  
-  .questions-list, .response {
-    margin-top: 20px;
-  }
-  
-  .question, .response {
-    margin-top: 10px;
-    padding: 10px;
-    background: #333;
-    border-radius: 5px;
-    color: #fff;
-  }
-  
-  .upload-button-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px; 
-  }
-  
-  .upload-button {
-    padding: 10px 20px;
-    cursor: pointer;
-    background-color: #4A90E2; 
-    color: white;
-    border: none;
-    border-radius: 5px;
-    transition: background-color 0.3s, transform 0.3s;
-  }
-  
-  .upload-button:hover {
-    background-color: #357ABD; 
-    transform: scale(1.05); 
+  display: flex;
+  height: 100vh;
+  background: #282c34;
+  overflow: hidden; 
+}
 
-    
-  }
+.file-upload-area {
+  width: 300px;
+  padding: 20px;
+  background: #2E325A;
+  color: #FFF;
+  border-right: 1px solid #414561;
+}
+
+.conversation-area {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; 
+  background: #1D2029;
+  color: white;
+  padding: 20px;
+}
+
+.input, .textarea, .button {
+  margin-bottom: 10px;
+  padding: 12px;
+  border-radius: 5px;
+  border: none;
+  color: #333;
+  background: #fff;
+}
+
+.questions-list, .response {
+  margin-top: 20px;
+}
+
+.question, .response {
+  margin-top: 10px;
+  padding: 10px;
+  background: #333;
+  border-radius: 5px;
+  color: #fff;
+}
+
+.upload-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.upload-button {
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #4A90E2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.upload-button:hover {
+  background-color: #357ABD;
+  transform: scale(1.05);
+}

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div>
     <book-upload @book-uploaded="handleBookUploaded"></book-upload>
     <chat-box v-if="bookUploaded" :book="currentBook"></chat-box>
@@ -32,9 +32,7 @@ export default {
   },
 };
 </script>
-<!-- test -->
-
 
 <style> 
 
-</style>
+</style> -->
