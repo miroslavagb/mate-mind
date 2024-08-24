@@ -62,7 +62,7 @@ export default {
         const response = await axios.post(
           `http://127.0.0.1:5000/generate/${questionCount}`,
           {
-            file_ids: [this.book.id],
+            file_ids: [this.book.open_ai_id],  // Use `open_ai_id` here as a string
             prompt: this.additionalPrompt,
             theme: this.questionTheme,
           },
@@ -84,7 +84,7 @@ export default {
 
       const headers = {
         Authorization: `Bearer ${token}`, 
-        'File-ID': this.book.id  
+        'File-ID': this.book.open_ai_id  
       };
 
       try {

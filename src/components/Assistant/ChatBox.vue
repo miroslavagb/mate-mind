@@ -19,7 +19,7 @@ export default {
   props: {
     book: {
       type: Object,
-      required: false, // changed to false for optional prop
+      required: false,
     },
   },
   data() {
@@ -46,22 +46,22 @@ export default {
       }
     },
     async askQuestion(question) {
-      if (!this.book) {
+      const token = localStorage.getItem('token'); 
+      if (!this.book || !this.book.open_ai_id) {
         this.responses.push({ id: Date.now(), text: "Please upload a book first to ask questions related to it.", user: false });
         return;
       }
+      
+      const headers = {
+        Authorization: `Bearer ${token}`, 
+        'File-ID': this.book.open_ai_id  
+      };
+      
       try {
         const response = await axios.post(
           "http://127.0.0.1:5000/answer",
           { question },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-              "User-Id": this.userId,
-              "File-Id": this.book.id,
-            },
-          }
+          { headers }
         );
         this.responses.push({ id: Date.now(), text: response.data.data.content, user: false });
       } catch (error) {
@@ -72,6 +72,7 @@ export default {
   }
 };
 </script>
+
 
 
 

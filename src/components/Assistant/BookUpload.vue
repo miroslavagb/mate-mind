@@ -1,10 +1,10 @@
 <template>
   <div>
     <input type="file" @change="fileSelected">
+    <div class="upload-button-container">
+      <button @click="uploadBook" :disabled="!selectedFile" class="upload-button">Upload</button>
+    </div>
   </div>
-  <div class="upload-button-container">
-  <button @click="uploadBook" :disabled="!selectedFile" class="upload-button">Upload</button>
-</div>
 </template>
 
 <script>
@@ -29,21 +29,23 @@ export default {
       try {
         const response = await axios.postForm('http://127.0.0.1:5000/upload', formData, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`, // JWT token
-            'Content-Type': 'multipart/form-data' // just in case 
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data'
           }
         });
-        this.$emit('book-uploaded', response.data); 
+        this.$emit('book-uploaded', response.data);  // Emit the newly uploaded file
         alert('Book uploaded successfully!');
       } catch (error) {
         console.error('Failed to upload book:', error);
         alert('Failed to upload book: ' + (error.response ? error.response.data.error : 'Network error'));
       }
-    }
+    },
   }
 };
 </script>
 
-<style>
-
+<style scoped>
+.upload-button-container {
+  margin-bottom: 20px;
+}
 </style>
