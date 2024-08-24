@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex items-center justify-center ">
     <div class="bg-white shadow-md rounded-lg p-8 max-w-md w-full mx-4 sm:mx-6 lg:mx-8">
-      <h2 class="text-2xl font-bold text-center mb-6">Register</h2>
+      <h2 class="text-2xl font-bold text-center mb-6 text-[#2c235c]">Register</h2>
       <form @submit.prevent="registerUser" class="space-y-4">
         <div>
           <label for="name" class="block text-sm font-medium text-gray-700">Name</label>

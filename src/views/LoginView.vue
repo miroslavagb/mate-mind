@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex items-center justify-center">
     <div class="bg-white shadow-md rounded-lg p-8 max-w-md w-full mx-4 sm:mx-6 lg:mx-8">
-      <h2 class="text-2xl font-bold text-center mb-6">Login</h2>
+      <h2 class="text-2xl font-bold text-center mb-6 text-[#2c235c]">Login</h2>
       <form @submit.prevent="loginUser" class="space-y-4">
         <div>
           <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
@@ -11,7 +11,7 @@
             id="email"
             placeholder="Email"
             required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm"
           >
         </div>
         <div>
@@ -22,7 +22,7 @@
             id="password"
             placeholder="Password"
             required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none sm:text-sm"
           >
         </div>
         <button
@@ -36,6 +36,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref } from 'vue';

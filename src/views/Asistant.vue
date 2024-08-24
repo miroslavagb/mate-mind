@@ -14,9 +14,22 @@
       </ul>
     </aside>
     <section class="conversation-area">
-      <!-- Use key to force remounting of chat-box and question-generator components -->
-      <chat-box :key="currentBook?.id" :book="currentBook" :disabled="!bookUploaded"></chat-box>
-      <question-generator :key="currentBook?.id" :disabled="!bookUploaded" :book="currentBook"></question-generator>
+      <div class="tabs">
+        <button 
+          class="tab" 
+          :class="{ active: activeTab === 'generator' }" 
+          @click="switchTab('generator')">Question Generator</button>
+        <button 
+          class="tab" 
+          :class="{ active: activeTab === 'evaluator' }" 
+          @click="switchTab('evaluator')">Question Evaluator</button>
+      </div>
+      <div v-show="activeTab === 'generator'" class="chat-area">
+        <chat-box :book="currentBook" :clear="clearChat" @clear-updated="resetClear"></chat-box>
+      </div>
+      <div v-show="activeTab === 'evaluator'" class="chat-area">
+        <question-generator :book="currentBook" :clear="clearChat" @clear-updated="resetClear"></question-generator>
+      </div>
     </section>
   </div>
   <div v-else>
@@ -38,6 +51,9 @@ const router = useRouter();
 const bookUploaded = ref(false);
 const currentBook = ref(null);
 const uploadedFiles = ref([]);
+const activeTab = ref('generator');
+
+const clearChat = ref(false);
 
 const fetchUploadedFiles = async () => {
   const token = localStorage.getItem('token'); 
@@ -60,7 +76,7 @@ const handleBookUploaded = async (book) => {
   const token = localStorage.getItem('token'); 
   const fileExists = uploadedFiles.value.some(file => file.id === book.id);
   if (!fileExists) {
-    uploadedFiles.value.push(book);  // Only add if it doesn't exist
+    uploadedFiles.value.push(book);  
   }
   
   try {
@@ -77,11 +93,16 @@ const handleBookUploaded = async (book) => {
 };
 
 const selectBook = (book) => {
-  currentBook.value = null; 
-  setTimeout(() => { 
-    currentBook.value = book;
-    bookUploaded.value = true;
-  }, 0);
+  clearChat.value = true;
+  currentBook.value = book;
+};
+
+const resetClear = () => {
+  clearChat.value = false; 
+};
+
+const switchTab = (tab) => {
+  activeTab.value = tab;
 };
 
 watch(isAuthenticated, (newVal) => {
@@ -126,6 +147,11 @@ onMounted(() => {
   margin-bottom: 10px;
   cursor: pointer;
   border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.file-upload-area li:hover {
+  background-color: #444;
 }
 
 .file-upload-area li.active {
@@ -138,27 +164,71 @@ onMounted(() => {
   flex-direction: column;
   background: #1D2029; 
   color: white;
-  padding: 20px;
+  padding: 0 20px;
 }
 
-.input, .textarea, .button {
-  margin-bottom: 10px;
-  padding: 12px;
-  border-radius: 5px;
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  margin-top: 15px;
+}
+
+.tab {
+  padding: 20px 20px; 
+  background: linear-gradient(145deg, #3b3e4e, #2a2d3e);
   border: none;
-  color: #333;
-  background: #fff; 
+  color: white;
+  cursor: pointer;
+  text-align: center;
+  font-size: 15px;
+  transition: background-color 0.3s, transform 0.3s;
+  position: relative;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: 0 10px;
+  line-height: 0.5;
 }
 
-.questions-list, .response {
-  margin-top: 20px;
+.tab:first-child {
+  margin-left: 0;
 }
 
-.question, .response {
-  margin-top: 10px;
-  padding: 10px;
-  background: #333;
-  border-radius: 5px;
-  color: #fff;
+.tab:last-child {
+  margin-right: 0;
 }
+
+.tab:hover {
+  background: linear-gradient(145deg, #383c53, #212437);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+.tab.active {
+  background: linear-gradient(145deg, #aa4ae2, #357abd);
+  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.3);
+}
+
+.tab.active:hover {
+  background: linear-gradient(145deg, #4a90e2, #aa4ae2);
+}
+
+.tab:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(74, 74, 226, 0.5);
+}
+
+
+
+
+.chat-area {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: #2A2D3E;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
 </style>

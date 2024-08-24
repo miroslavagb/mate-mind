@@ -1,13 +1,31 @@
 <template>
   <div class="chat-container">
     <div class="messages">
-      <div v-for="response in responses" :key="response.id" class="message" :class="{'user': response.user}">
+      <div 
+        v-for="response in responses" 
+        :key="response.id" 
+        class="message" 
+        :class="{'user': response.user, 'response': !response.user}"
+      >
         {{ response.text }}
       </div>
     </div>
     <div class="input-area">
-      <input type="text" v-model="message" :disabled="!book" placeholder="Ask a question or command..." class="input-field" @keyup.enter="sendMessage">
-      <button @click="sendMessage" :disabled="!book" class="button">Send</button>
+      <input 
+        type="text" 
+        v-model="message" 
+        :disabled="!book" 
+        placeholder="How can I help you with your studies?" 
+        class="input-field" 
+        @keyup.enter="sendMessage"
+      >
+      <button 
+        @click="sendMessage" 
+        :disabled="!book" 
+        class="button"
+      >
+        Send
+      </button>
     </div>
   </div>
 </template>
@@ -21,13 +39,24 @@ export default {
       type: Object,
       required: false,
     },
+    clear: {
+      type: Boolean,
+      default: false,
+    }
   },
   data() {
     return {
       message: '',
       responses: [],
-      userId: localStorage.getItem('userId'), 
     };
+  },
+  watch: {
+    clear(newValue) {
+      if (newValue) {
+        this.responses = [];
+        this.$emit('clear-updated'); 
+      }
+    }
   },
   methods: {
     sendMessage() {
@@ -76,8 +105,7 @@ export default {
 
 
 
-
-<style scoped>
+<style> 
 
 .chat-container {
   display: flex;
@@ -92,28 +120,78 @@ export default {
 }
 
 .message {
-  margin: 5px 0;
-  color: #fff;
+  max-width: 70%; 
+  padding: 10px 15px;
+  margin: 10px 0;
+  border-radius: 20px;
+  color: #ffffff;
+  position: relative;
+  font-size: 14px;
+  word-wrap: break-word; 
 }
 
 .user {
-  text-align: right;
+  background-color: #357ABD;
+  align-self: flex-end; 
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  margin-left: auto;
+  text-align: left; 
+}
+
+.user:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -10px;
+  border-width: 10px 0 10px 10px;
+  border-style: solid;
+  border-color: transparent transparent transparent #357ABD;
+}
+
+.response {
+  background-color: #3B3E4E;
+  align-self: flex-start; 
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  margin-right: auto;
+  text-align: left; 
+}
+
+.response:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -10px;
+  border-width: 10px 10px 10px 0;
+  border-style: solid;
+  border-color: transparent #3B3E4E transparent transparent;
 }
 
 .input-area {
   display: flex;
   padding: 10px;
+  background-color: #2A2D3E;
+  position: sticky;
+  bottom: 0;
+  width: 100%;
 }
 
 .input-field {
   flex-grow: 1;
   margin-right: 10px;
+  padding: 10px;
+  border-radius: 20px;
+  border: 1px solid #357ABD;
+  background-color: #2A2D3E;
+  color: #fff;
 }
 
 .button {
   padding: 10px 20px;
   background-color: #4A90E2;
   border: none;
+  border-radius: 20px;
   color: white;
   cursor: pointer;
 }
@@ -122,13 +200,5 @@ export default {
   background-color: #357ABD;
 }
 
-.chat-area {
-  max-height: 80vh;
-  overflow-y: auto;
-  background: linear-gradient(145deg, #252846, #1E2039);
-  padding: 10px;
-  margin-bottom: 20px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-}
+
 </style>
