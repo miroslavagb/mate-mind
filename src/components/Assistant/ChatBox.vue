@@ -75,7 +75,12 @@ export default {
       this.processMessage(trimmedMessage);
     },
     processMessage(message) {
-      if (message.toLowerCase().includes("how") || message.toLowerCase().includes("what")) {
+      const questionWords = ["how", "what", "where", "who", "which", "when", "why", "whose" , "is", "are "];
+      const lowercasedMessage = message.toLowerCase();
+      
+      const isQuestion = questionWords.some(word => lowercasedMessage.includes(word));
+
+      if (isQuestion) {
         this.askQuestion(message);
       } else {
         this.responses.push({ id: Date.now(), text: "I'm not sure how to help with that.", user: false });
@@ -126,8 +131,6 @@ export default {
   }
 };
 </script>
-
-
 
 
 
