@@ -42,7 +42,7 @@ export default {
     clear: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   data() {
     return {
@@ -54,7 +54,13 @@ export default {
     clear(newValue) {
       if (newValue) {
         this.responses = [];
-        this.$emit('clear-updated'); 
+        this.saveConversation();  // Save the empty conversation
+        this.$emit('clear-updated');
+      }
+    },
+    book(newValue) {
+      if (newValue) {
+        this.loadConversation();  // Load conversation when a new book is selected
       }
     }
   },
@@ -65,6 +71,7 @@ export default {
       
       this.responses.push({ id: Date.now(), text: trimmedMessage, user: true });
       this.message = '';
+      this.saveConversation();  
       this.processMessage(trimmedMessage);
     },
     processMessage(message) {
@@ -72,12 +79,14 @@ export default {
         this.askQuestion(message);
       } else {
         this.responses.push({ id: Date.now(), text: "I'm not sure how to help with that.", user: false });
+        this.saveConversation();  
       }
     },
     async askQuestion(question) {
       const token = localStorage.getItem('token'); 
       if (!this.book || !this.book.open_ai_id) {
         this.responses.push({ id: Date.now(), text: "Please upload a book first to ask questions related to it.", user: false });
+        this.saveConversation(); 
         return;
       }
       
@@ -93,14 +102,31 @@ export default {
           { headers }
         );
         this.responses.push({ id: Date.now(), text: response.data.data.content, user: false });
+        this.saveConversation();  // Save the conversation
       } catch (error) {
         console.error("Failed to get an answer:", error);
         this.responses.push({ id: Date.now(), text: "Error getting an answer. Please try again.", user: false });
+        this.saveConversation();  
       }
     },
+    saveConversation() {
+      if (this.book && this.book.id) {
+        localStorage.setItem(`conversation_${this.book.id}`, JSON.stringify(this.responses));
+      }
+    },
+    loadConversation() {
+      if (this.book && this.book.id) {
+        const savedConversation = localStorage.getItem(`conversation_${this.book.id}`);
+        this.responses = savedConversation ? JSON.parse(savedConversation) : [];
+      }
+    }
+  },
+  mounted() {
+    this.loadConversation();  
   }
 };
 </script>
+
 
 
 

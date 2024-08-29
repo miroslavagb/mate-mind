@@ -25,10 +25,10 @@
           @click="switchTab('evaluator')">Question Evaluator</button>
       </div>
       <div v-show="activeTab === 'generator'" class="chat-area">
-        <chat-box :book="currentBook" :clear="clearChat" @clear-updated="resetClear"></chat-box>
+        <chat-box :book="currentBook" :responses="generatorResponses" @update:responses="generatorResponses = $event"></chat-box>
       </div>
       <div v-show="activeTab === 'evaluator'" class="chat-area">
-        <question-generator :book="currentBook" :clear="clearChat" @clear-updated="resetClear"></question-generator>
+        <question-generator :book="currentBook" :responses="evaluatorResponses" @update:responses="evaluatorResponses = $event"></question-generator>
       </div>
     </section>
   </div>
@@ -52,8 +52,22 @@ const bookUploaded = ref(false);
 const currentBook = ref(null);
 const uploadedFiles = ref([]);
 const activeTab = ref('generator');
+const generatorResponses = ref([]);
+const evaluatorResponses = ref([]);
 
-const clearChat = ref(false);
+// Load convo for a specific book ID
+const loadConversation = (bookId) => {
+  const savedConversation = localStorage.getItem(`conversation_${bookId}`);
+  if (savedConversation) {
+    return JSON.parse(savedConversation);
+  }
+  return [];
+};
+
+// Save convo for a specific book ID
+const saveConversation = (bookId, conversation) => {
+  localStorage.setItem(`conversation_${bookId}`, JSON.stringify(conversation));
+};
 
 const fetchUploadedFiles = async () => {
   const token = localStorage.getItem('token'); 
@@ -93,12 +107,17 @@ const handleBookUploaded = async (book) => {
 };
 
 const selectBook = (book) => {
-  clearChat.value = true;
-  currentBook.value = book;
-};
+  // Save current convo
+  if (currentBook.value) {
+    saveConversation(currentBook.value.id, generatorResponses.value);
+    saveConversation(currentBook.value.id, evaluatorResponses.value); 
+  }
 
-const resetClear = () => {
-  clearChat.value = false; 
+  // Clear and load new convo
+  generatorResponses.value = loadConversation(book.id);
+  evaluatorResponses.value = loadConversation(book.id); 
+  currentBook.value = book;
+  bookUploaded.value = true;
 };
 
 const switchTab = (tab) => {
@@ -217,9 +236,6 @@ onMounted(() => {
   outline: none;
   box-shadow: 0 0 0 3px rgba(74, 74, 226, 0.5);
 }
-
-
-
 
 .chat-area {
   flex-grow: 1;
