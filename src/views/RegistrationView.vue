@@ -54,6 +54,14 @@
           Register
         </button>
       </form>
+      <div class="mt-4 text-center">
+        <p class="text-sm text-gray-600">
+          Already have an account? 
+          <router-link to="/login" class="text-indigo-600 hover:underline">
+            Log in
+          </router-link>
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -61,15 +69,17 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 
 const name = ref('');
 const email = ref('');
 const password = ref('');
 const confirmPassword = ref('');
+const router = useRouter();
 
 const registerUser = async () => {
   if (password.value !== confirmPassword.value) {
-    alert('Passwords do not match');
+    console.log('Passwords do not match');
     return;
   }
   try {
@@ -79,14 +89,14 @@ const registerUser = async () => {
       password: password.value,
       confirmPassword: confirmPassword.value
     });
-    alert(response.data.message);
-    // Redirect or other when sucess reg
-    //does the brach work properly!?
+    console.log(response.data.message);
+    // Redirect to login after successful registration
+    router.push('/login');
   } catch (error) {
     if (error.response) {
-      alert(error.response.data.message);
+      console.log(error.response.data.message);
     } else {
-      alert('An error occurred while registering. Please try again later.');
+      console.log('An error occurred while registering. Please try again later.');
     }
   }
 };

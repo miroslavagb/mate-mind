@@ -34,10 +34,10 @@ export default {
           }
         });
         this.$emit('book-uploaded', response.data);  // Emit the newly uploaded file
-        alert('Book uploaded successfully!');
+        console.log('Book uploaded successfully!');
       } catch (error) {
         console.error('Failed to upload book:', error);
-        alert('Failed to upload book: ' + (error.response ? error.response.data.error : 'Network error'));
+        console.log('Failed to upload book: ' + (error.response ? error.response.data.error : 'Network error'));
       }
     },
   }

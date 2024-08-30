@@ -17,9 +17,9 @@ const logoutUser = () => {
   try {
     localStorage.removeItem('token');
     router.push('/login');
-    alert('Logged out successfully');
+    console.log('Logged out successfully');
   } catch (error) {
-    alert('An error occurred while logging out');
+    console.log('An error occurred while logging out');
   } finally {
     logoutClicked.value = false; 
   }

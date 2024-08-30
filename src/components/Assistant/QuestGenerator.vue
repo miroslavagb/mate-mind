@@ -1,7 +1,6 @@
 <template>
   <div class="quiz-container">
-    <div v-if="clear" class="quiz-reset">Quiz has been reset.</div>
-    <div v-else class="scroll-container">
+    <div class="scroll-container">
       <input
         v-model="questionTheme"
         :disabled="!book"
@@ -23,12 +22,18 @@
       <div v-if="generatedQuestions.length" class="questions-list">
         <div v-for="(question, index) in generatedQuestions" :key="question.id" class="question">
           <h4>{{ question.title }}</h4>
-          <ul>
-            <li v-for="option in question.options" :key="option.id">
-              {{ option.key }}: {{ option.value }}
+          <ul class="options-list">
+            <li v-for="option in question.options" :key="option.id" class="option-item">
+              <input
+                type="radio"
+                :name="'question_' + index"
+                :value="option.key"
+                v-model="userAnswers[index]"
+                class="radio-input"
+              />
+              <label>{{ option.key }}: {{ option.value }}</label>
             </li>
           </ul>
-          <input v-model="userAnswers[index]" placeholder="Your answer (e.g., A, B, C)" class="answer-input">
         </div>
         <button @click="evaluateAnswers" :disabled="!generatedQuestions.length" class="button">
           Evaluate
@@ -46,6 +51,8 @@
     </div>
   </div>
 </template>
+
+
 
 <script>
 import axios from "axios";
@@ -116,14 +123,14 @@ export default {
         this.generating = false;
       } catch (error) {
         console.error("Failed to generate questions:", error);
-        alert("Failed to generate questions. Please try again.");
+        console.log("Failed to generate questions. Please try again.");
         this.generating = false;
       }
     },
     async evaluateAnswers() {
       const token = localStorage.getItem("token");
       if (!this.book || !this.book.id) {
-        alert("No book selected for evaluation.");
+        console.log("No book selected for evaluation.");
         return;
       }
 
@@ -145,7 +152,7 @@ export default {
         });
 
         if (userAnswers.some((answer) => answer.option_id === null)) {
-          alert("Please enter valid answers for all questions.");
+          console.log("Please select an answer for all questions.");
           return;
         }
 
@@ -158,7 +165,7 @@ export default {
         this.evaluationResult = response.data.evaluation_response;
       } catch (error) {
         console.error("Failed to evaluate answers:", error);
-        alert("Failed to evaluate answers. Please try again.");
+        console.log("Failed to evaluate answers. Please try again.");
       }
     },
     generateNewQuiz() {
@@ -175,6 +182,7 @@ export default {
 
 
 
+
 <style scoped>
 .quiz-container {
   display: flex;
@@ -188,39 +196,52 @@ export default {
   padding-right: 10px;
 }
 
-.fixed-bottom-container {
-  flex-shrink: 0;
-  padding: 10px;
-  background-color: #2A2D3E;
-  position: sticky;
-  bottom: 0;
-  border-top: 1px solid #444;
-}
-
 .input,
-.button,
-.answer-input {
+.button {
   display: block;
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 8px;
+  width: 70%;
+  max-width: 400px;
+  margin: 10px auto;
+  padding: 10px;
   border-radius: 5px;
   border: 1px solid #d5d3d3;
   background-color: #f4f4f4;
-  color: black; 
+  color: black;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-size: 14px;
 }
-
 
 .questions-list {
   margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .question {
+  width: 100%;
+  max-width: 700px;
   margin-top: 10px;
   padding: 10px;
   border: 1px solid #ffffff;
   border-radius: 5px;
   background-color: #3B3E4E;
+}
+
+.options-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.radio-input {
+  margin-right: 10px;
 }
 
 .evaluation-result {
@@ -240,31 +261,33 @@ export default {
 }
 
 .button {
-  padding: 10px 20px;
   background-color: #4A90E2;
   color: white;
   border: none;
   cursor: pointer;
   transition: background-color 0.3s;
-  width: auto; 
-  margin: 0 auto; 
-  display: block; 
+  text-align: center;
+  padding: 8px 16px;
+  width: auto;
 }
 
 .button:hover {
   background-color: #357ABD;
 }
 
-.button:disabled {
-  background-color: #777;
-  cursor: not-allowed;
-}
-
-
-.input:focus, .answer-input:focus {
+.input:focus {
   outline: none;
   border-color: #357ABD;
 }
 
-
+.fixed-bottom-container {
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+  padding: 10px;
+  background-color: #2A2D3E;
+  position: sticky;
+  bottom: 0;
+  border-top: 1px solid #444;
+}
 </style>

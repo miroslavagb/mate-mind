@@ -47,12 +47,7 @@
                 >
                   <router-link to="/">{{ $t('projectRoutes.home') }}</router-link>
                 </li>
-                <li
-                  v-if="displayAbout === 'true'"
-                  :class="{ 'focus:bg-primary bg-primary': $route.path === '/about' }"
-                >
-                  <router-link to="/about">{{ $t('projectRoutes.about') }}</router-link>
-                </li>
+               
                 <li
                   v-if="displayAiAssisstant === 'true'"
                   :class="{ 'focus:bg-primary bg-primary': $route.path === '/aiAssisstant' }"
@@ -82,9 +77,7 @@
           <li v-if="displayHome === 'true'">
             <router-link to="/" @click="handleClick()">{{ $t('projectRoutes.home') }}</router-link>
           </li>
-          <li v-if="displayAbout === 'true'">
-            <router-link to="/about" @click="handleClick()">{{ $t('projectRoutes.about') }}</router-link>
-          </li>
+          
           <li v-if="displayAiAssisstant === 'true'">
             <router-link to="/aiAssisstant" @click="handleClick()">{{ $t('projectRoutes.aiAssisstant') }}</router-link>
           </li>
@@ -120,7 +113,6 @@ const route = useRoute();
 
 const showImage = t('projectSettings.navbarSettings.displayLogo');
 const displayHome = t('projectSettings.navbarSettings.home');
-const displayAbout = t('projectSettings.navbarSettings.about');
 const displayAiAssisstant = t('projectSettings.navbarSettings.aiAssisstant');
 const displayLanguageSelector = t('projectSettings.navbarSettings.languageChanger');
 const displayLoginRegister = t('projectSettings.navbarSettings.loginRegister');

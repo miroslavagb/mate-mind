@@ -64,14 +64,14 @@ const loginUser = async () => {
     if (response.data.access_token) {
       // JWT in local storage
       localStorage.setItem('token', response.data.access_token);
-      alert('Login successful');
+      console.log('Login successful');
       // redirect to  home page or asistahnt?
       router.push('/');
     } else {
-      alert('Login failed: ' + (response.data.message || 'Unknown error'));
+      console.log('Login failed: ' + (response.data.message || 'Unknown error'));
     }
   } catch (error) {
-    alert('Login error: ' + (error.response ? error.response.data.message : error.message));
+    console.log('Login error: ' + (error.response ? error.response.data.message : error.message));
   } finally {
     isSubmitting.value = false;
   }
